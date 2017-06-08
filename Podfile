@@ -9,4 +9,5 @@ target 'RoadChecKReport' do
     pod ‘FacebookShare’
     pod 'Firebase/Core'
     pod 'Firebase/Auth'
+    pod 'GoogleMaps'
 end
