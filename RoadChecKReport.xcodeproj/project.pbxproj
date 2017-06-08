@@ -65,16 +65,32 @@
 		548CACAB1EE7E18200F7DB67 /* RoadChecKReport */ = {
 			isa = PBXGroup;
 			children = (
-				548CACAC1EE7E18200F7DB67 /* AppDelegate.swift */,
-				548CACB31EE7E18200F7DB67 /* Assets.xcassets */,
 				548CACB51EE7E18200F7DB67 /* LaunchScreen.storyboard */,
-				548CACB81EE7E18200F7DB67 /* Info.plist */,
-				545041FA1EE9427300501D75 /* GoogleService-Info.plist */,
-				548CACBE1EE7E1CC00F7DB67 /* LogInViewController.swift */,
-				545041F81EE9290D00501D75 /* MainViewController.swift */,
+				548CACAC1EE7E18200F7DB67 /* AppDelegate.swift */,
+				54E6151B1EE94CD500139593 /* pList */,
+				54E6151C1EE94CF900139593 /* VIew */,
+				548CACB31EE7E18200F7DB67 /* Assets.xcassets */,
 				545041F11EE901DB00501D75 /* RoadChecKReport-Bridging-Header.h */,
 			);
 			path = RoadChecKReport;
+			sourceTree = "<group>";
+		};
+		54E6151B1EE94CD500139593 /* pList */ = {
+			isa = PBXGroup;
+			children = (
+				548CACB81EE7E18200F7DB67 /* Info.plist */,
+				545041FA1EE9427300501D75 /* GoogleService-Info.plist */,
+			);
+			name = pList;
+			sourceTree = "<group>";
+		};
+		54E6151C1EE94CF900139593 /* VIew */ = {
+			isa = PBXGroup;
+			children = (
+				548CACBE1EE7E1CC00F7DB67 /* LogInViewController.swift */,
+				545041F81EE9290D00501D75 /* MainViewController.swift */,
+			);
+			name = VIew;
 			sourceTree = "<group>";
 		};
 		6F1C6F06595042B90217E8A5 /* Frameworks */ = {
