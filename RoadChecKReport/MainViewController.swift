@@ -11,9 +11,26 @@ import GoogleMaps
 
 class MainViewController: UIViewController, GMSMapViewDelegate {
     
+    //MARK: 宣告
     var locationManager = CLLocationManager()
     var currentLocation : CLLocation?
     var zoomLevel : Float = 15.0
+    
+    let circleButton:UIButton = {
+        let bt = UIButton()
+        bt.translatesAutoresizingMaskIntoConstraints = false
+        bt.backgroundColor = UIColor(hexString: "#3e426f")
+        
+        return bt
+    }()
+    
+    let circleImageView:UIImageView = {
+        let image = UIImageView()
+        image.translatesAutoresizingMaskIntoConstraints = false
+        image.image = UIImage(named: "Exclamation")
+        
+        return image
+    }()
     
     let bottomView:UIView = {
         let view = UIView()
@@ -47,6 +64,8 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         self.locationManagerInit()
         self.setupMapView()
         self.setupBottom()
+        self.setupCircleButton()
+        self.setupCircleImage()
 //        self.signOutBT()
     }
     
@@ -59,7 +78,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         locationManager.startUpdatingLocation()
         locationManager.delegate = self
     }
-    
+    //MARK: InterFace
     func setupMapView() {
         
         let my = locationManager.location?.coordinate
@@ -95,6 +114,30 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         bottomView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         bottomView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
+    
+    func setupCircleButton() {
+        
+        circleButton.addTarget(self, action: #selector(report), for: .touchUpInside)
+        
+        view.addSubview(circleButton)
+        
+        circleButton.layer.cornerRadius = (width * 0.25) / 2
+        
+        circleButton.widthAnchor.constraint(equalToConstant: width * 0.25).isActive = true
+        circleButton.heightAnchor.constraint(equalToConstant: width * 0.25).isActive = true
+        circleButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        circleButton.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+    }
+    
+    func setupCircleImage() {
+        
+        circleButton.addSubview(circleImageView)
+        
+        circleImageView.widthAnchor.constraint(equalToConstant: (width * 0.25) * 0.7).isActive = true
+        circleImageView.heightAnchor.constraint(equalToConstant: (width * 0.25) * 0.7).isActive = true
+        circleImageView.centerXAnchor.constraint(equalTo: circleButton.centerXAnchor).isActive = true
+        circleImageView.centerYAnchor.constraint(equalTo: circleButton.centerYAnchor).isActive = true
+    }
 
     func signOutBT() {
         
@@ -124,9 +167,13 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         }
     }
     
+    func report() {
+        
+        print("report!!!")
+    }
     
 }
-
+//MARK: Extension
 extension MainViewController: CLLocationManagerDelegate {
     
     // Handle incoming location events.
