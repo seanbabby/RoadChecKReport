@@ -15,11 +15,20 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
     var locationManager = CLLocationManager()
     var currentLocation : CLLocation?
     var zoomLevel : Float = 15.0
+    var statusBarHeight:CGFloat = 0.0
+    
+    let width = UIScreen.main.bounds.width
+    let height = UIScreen.main.bounds.height
+    
+    var canUseHeight:CGFloat = 0.0
     
     let circleButton:UIButton = {
         let bt = UIButton()
         bt.translatesAutoresizingMaskIntoConstraints = false
         bt.backgroundColor = UIColor(hexString: "#3e426f")
+        bt.tag = 0
+        bt.borderWidth = 2
+        bt.borderColor = UIColor(hexString: "#7c82a2")
         
         return bt
     }()
@@ -53,11 +62,44 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         return map
     }()
     
-    let width = UIScreen.main.bounds.width
-    let height = UIScreen.main.bounds.height
+    let mapButton:UIButton = {
+        let bt = UIButton()
+        bt.translatesAutoresizingMaskIntoConstraints = false
+        bt.tag = 1
+        
+        return bt
+    }()
+    
+    let settingButton:UIButton = {
+        let bt = UIButton()
+        bt.translatesAutoresizingMaskIntoConstraints = false
+        bt.tag = 2
+        
+        return bt
+    }()
+    
+    let mapIcon:UIImageView = {
+        let icon = UIImageView()
+        icon.translatesAutoresizingMaskIntoConstraints = false
+        icon.image = UIImage(named: "map")
+        
+        return icon
+    }()
+    
+    let settingIcon:UIImageView = {
+        let icon = UIImageView()
+        icon.translatesAutoresizingMaskIntoConstraints = false
+        icon.image = UIImage(named: "setting")
+        
+        return icon
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let statusBar: UIView = UIApplication.shared.value(forKey: "statusBar") as! UIView
+        statusBarHeight = statusBar.height
+        canUseHeight = height - statusBarHeight
         
         view.backgroundColor = UIColor.white
 
@@ -66,6 +108,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         self.setupBottom()
         self.setupCircleButton()
         self.setupCircleImage()
+        self.setupIcon()
 //        self.signOutBT()
     }
     
@@ -78,7 +121,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         locationManager.startUpdatingLocation()
         locationManager.delegate = self
     }
-    //MARK: InterFace
+    //MARK: InterFace Setup
     func setupMapView() {
         
         let my = locationManager.location?.coordinate
@@ -100,9 +143,9 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
     func setupMapViewContranits() {
         
         mapView.widthAnchor.constraint(equalToConstant: width).isActive = true
-        mapView.heightAnchor.constraint(equalToConstant: height * 0.9).isActive = true
+        mapView.heightAnchor.constraint(equalToConstant: height * 0.9 - statusBarHeight).isActive = true
         mapView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        mapView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        mapView.topAnchor.constraint(equalTo: view.topAnchor, constant: statusBarHeight).isActive = true
     }
     
     func setupBottom() {
@@ -117,9 +160,23 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
     
     func setupCircleButton() {
         
-        circleButton.addTarget(self, action: #selector(report), for: .touchUpInside)
+        mapButton.addTarget(self, action: #selector(buttontClick), for: .touchUpInside)
+        settingButton.addTarget(self, action: #selector(buttontClick), for: .touchUpInside)
+        circleButton.addTarget(self, action: #selector(buttontClick), for: .touchUpInside)
         
+        bottomView.addSubview(mapButton)
+        bottomView.addSubview(settingButton)
         view.addSubview(circleButton)
+        
+        mapButton.widthAnchor.constraint(equalToConstant: width / 2).isActive = true
+        mapButton.heightAnchor.constraint(equalToConstant: height * 0.1).isActive = true
+        mapButton.leftAnchor.constraint(equalTo: bottomView.leftAnchor).isActive = true
+        mapButton.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor).isActive = true
+        
+        settingButton.widthAnchor.constraint(equalToConstant: width / 2).isActive = true
+        settingButton.heightAnchor.constraint(equalToConstant: height * 0.1).isActive = true
+        settingButton.rightAnchor.constraint(equalTo: bottomView.rightAnchor).isActive = true
+        settingButton.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor).isActive = true
         
         circleButton.layer.cornerRadius = (width * 0.25) / 2
         
@@ -127,6 +184,22 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         circleButton.heightAnchor.constraint(equalToConstant: width * 0.25).isActive = true
         circleButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         circleButton.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+    }
+    
+    func setupIcon() {
+        
+        mapButton.addSubview(mapIcon)
+        settingButton.addSubview(settingIcon)
+        
+        mapIcon.widthAnchor.constraint(equalToConstant: (height * 0.1) * 0.7).isActive = true
+        mapIcon.heightAnchor.constraint(equalToConstant: (height * 0.1) * 0.7).isActive = true
+        mapIcon.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor).isActive = true
+        mapIcon.centerXAnchor.constraint(equalTo: bottomView.centerXAnchor, constant: -(width / 3.5)).isActive = true
+        
+        settingIcon.widthAnchor.constraint(equalToConstant: (height * 0.1) * 0.7).isActive = true
+        settingIcon.heightAnchor.constraint(equalToConstant: (height * 0.1) * 0.7).isActive = true
+        settingIcon.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor).isActive = true
+        settingIcon.centerXAnchor.constraint(equalTo: bottomView.centerXAnchor, constant: width / 3.5).isActive = true
     }
     
     func setupCircleImage() {
@@ -151,7 +224,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         
         view.addSubview(bt)
     }
-    
+    //MARK: Function
     func signOut() {
         
         let firebaseAuth = Auth.auth()
@@ -167,10 +240,21 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         }
     }
     
-    func report() {
+    func buttontClick(sender: UIButton) {
         
-        print("report!!!")
+        if sender.tag == 1 {
+            print("map")
+        } else if sender.tag == 2 {
+            print("setting")
+        } else if sender.tag == 0 {
+            print("report")
+        }
     }
+    
+//    func report() {
+//        
+//        print("report!!!")
+//    }
     
 }
 //MARK: Extension
