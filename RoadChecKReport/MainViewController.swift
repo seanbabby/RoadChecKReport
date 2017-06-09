@@ -106,7 +106,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         self.locationManagerInit()
         self.setupMapView()
         self.setupBottom()
-        self.setupCircleButton()
+        self.setupButton()
         self.setupCircleImage()
         self.setupIcon()
 //        self.signOutBT()
@@ -122,6 +122,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         locationManager.delegate = self
     }
     //MARK: InterFace Setup
+    
     func setupMapView() {
         
         let my = locationManager.location?.coordinate
@@ -130,7 +131,6 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         mapView.camera = camera
         
         view.addSubview(mapView)
-        self.setupMapViewContranits()
         
         // Creates a marker in the center of the map.
 //        let marker = GMSMarker()
@@ -138,9 +138,6 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
 //        marker.title = "Sydney"
 //        marker.snippet = "Australia"
 //        marker.map = mapView
-    }
-    
-    func setupMapViewContranits() {
         
         mapView.widthAnchor.constraint(equalToConstant: width).isActive = true
         mapView.heightAnchor.constraint(equalToConstant: height * 0.9 - statusBarHeight).isActive = true
@@ -158,7 +155,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         bottomView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
     
-    func setupCircleButton() {
+    func setupButton() {
         
         mapButton.addTarget(self, action: #selector(buttontClick), for: .touchUpInside)
         settingButton.addTarget(self, action: #selector(buttontClick), for: .touchUpInside)
@@ -251,12 +248,12 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         }
     }
     
-//    func report() {
-//        
-//        print("report!!!")
-//    }
     
 }
+
+
+
+
 //MARK: Extension
 extension MainViewController: CLLocationManagerDelegate {
     
