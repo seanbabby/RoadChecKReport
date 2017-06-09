@@ -180,7 +180,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         circleButton.widthAnchor.constraint(equalToConstant: width * 0.25).isActive = true
         circleButton.heightAnchor.constraint(equalToConstant: width * 0.25).isActive = true
         circleButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        circleButton.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        circleButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -3).isActive = true
     }
     
     func setupIcon() {
@@ -254,7 +254,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
 
 
 
-//MARK: Extension
+    //MARK: Extension
 extension MainViewController: CLLocationManagerDelegate {
     
     // Handle incoming location events.
