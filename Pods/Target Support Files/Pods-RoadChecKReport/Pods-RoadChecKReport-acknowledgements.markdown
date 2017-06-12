@@ -396,6 +396,14 @@ Copyright 2017 Google
 
 Copyright 2017 Google
 
+## GooglePlacePicker
+
+Copyright 2017 Google
+
+## GooglePlaces
+
+Copyright 2017 Google
+
 ## GoogleToolboxForMac
 
 

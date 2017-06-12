@@ -12,6 +12,7 @@ import GoogleMaps
 class MainViewController: UIViewController, GMSMapViewDelegate {
     
     //MARK: 宣告
+    
     var locationManager = CLLocationManager()
     var currentLocation : CLLocation?
     var zoomLevel : Float = 15.0
@@ -93,7 +94,8 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         
         return icon
     }()
-
+    //MARK: viewDidLoad
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -121,6 +123,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         locationManager.startUpdatingLocation()
         locationManager.delegate = self
     }
+    
     //MARK: InterFace Setup
     
     func setupMapView() {
@@ -239,12 +242,24 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
     
     func buttontClick(sender: UIButton) {
         
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        guard let my = locationManager.location else {
+            return
+        }
+//        let my = locationManager.location
+        
+        //button tag: 0->report, 1->map, 2->setting
         if sender.tag == 1 {
             print("map")
         } else if sender.tag == 2 {
             print("setting")
         } else if sender.tag == 0 {
-            print("report")
+            print("user ID: \(uid)")
+            print("latitude:\(my.coordinate.latitude), longitude:\(my.coordinate.longitude)")
+            
+            
         }
     }
     

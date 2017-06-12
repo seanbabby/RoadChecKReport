@@ -13,6 +13,7 @@ import FacebookCore
 import FacebookShare
 import Firebase
 import GoogleMaps
+import GooglePlaces
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -24,6 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         
         GMSServices.provideAPIKey("AIzaSyAYJf9e2NHJRs1pniKT1HmJf7RXQfkGoI0")
+        GMSPlacesClient.provideAPIKey("AIzaSyDepvJN_aKD5wc9uvEgrzcBvlwApM7PAqE")
         
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
