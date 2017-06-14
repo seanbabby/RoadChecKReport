@@ -8,11 +8,13 @@
 
 import UIKit
 import GoogleMaps
+import GooglePlaces
 
 class MainViewController: UIViewController, GMSMapViewDelegate {
     
     //MARK: 宣告
     
+    var placesClient: GMSPlacesClient!
     var locationManager = CLLocationManager()
     var currentLocation : CLLocation?
     var zoomLevel : Float = 15.0
@@ -98,6 +100,9 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        placesClient = GMSPlacesClient.shared()
+        locationManager.requestAlwaysAuthorization()
         
         let statusBar: UIView = UIApplication.shared.value(forKey: "statusBar") as! UIView
         statusBarHeight = statusBar.height
@@ -259,7 +264,30 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
             print("user ID: \(uid)")
             print("latitude:\(my.coordinate.latitude), longitude:\(my.coordinate.longitude)")
             
+            self.getCurrentPlace()
+        }
+    }
+    
+    func getCurrentPlace() {
+        
+        placesClient.currentPlace { (placeLikelihoodList, error) in
+            if let error = error {
+                print("Pick Place error: \(error.localizedDescription)")
+                return
+            }
             
+            if let placeLikelihoodList = placeLikelihoodList {
+                let place = placeLikelihoodList.likelihoods
+                for i in 0 ... (place.count - 1) {
+                    print("\(place[i].likelihood)")
+                }
+//                let place = placeLikelihoodList.likelihoods.first?.place
+//                if let place = place {
+//                    print("place: \(place.name)")
+//                    let address = place.formattedAddress?.components(separatedBy: ", ").joined(separator: "\n")
+//                    print("address: \(address!)")
+//                }
+            }
         }
     }
     
@@ -311,5 +339,23 @@ extension MainViewController: CLLocationManagerDelegate {
         locationManager.stopUpdatingLocation()
         print("Error: \(error)")
     }
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
 }
