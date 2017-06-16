@@ -12,12 +12,13 @@
 import UIKit
 import FBSDKLoginKit
 import FacebookLogin
+import FacebookCore
 import Firebase
 
 
 class LogInViewController: UIViewController {
     
-    var onLogin = UILabel()
+    var onLogining = UILabel()
     
     var indicator:UIActivityIndicatorView?
     
@@ -47,18 +48,20 @@ class LogInViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if Auth.auth().currentUser?.uid != nil {
-            
-            print("uid: ", Auth.auth().currentUser?.uid as Any)
+        let user = Auth.auth().currentUser
+        
+        if (user?.uid) != nil  {
+            print("uid: \(String(describing: user?.uid))")
+            print("userInfo: \(user?.displayName, user?.email, user?.photoURL)")
             
             DispatchQueue.main.async {
                 let mainVC = MainViewController()
-            
+                
                 UIApplication.shared.keyWindow?.rootViewController = mainVC
                 self.dismiss(animated: true, completion: nil)
             }
         } else {
-            self.onLogin.isHidden = true
+            self.onLogining.isHidden = true
         }
     }
     
@@ -86,7 +89,9 @@ class LogInViewController: UIViewController {
                 print("User cancelled login.")
             case .success(grantedPermissions: _, declinedPermissions: _, token: _):
                 
-                self.onLogin.isHidden = false
+                
+                
+                self.onLogining.isHidden = false
                 self.setupIndicator()
                 
                 let credential = FacebookAuthProvider.credential(withAccessToken: FBSDKAccessToken.current().tokenString)
@@ -124,21 +129,21 @@ class LogInViewController: UIViewController {
     }
     
     func setOnLoginningLabel() {
-        onLogin = UILabel()
-        onLogin.isHidden = true
-        onLogin.translatesAutoresizingMaskIntoConstraints = false
-        onLogin.textAlignment = .center
-        onLogin.textColor = UIColor.white
-        onLogin.backgroundColor = UIColor(red: 38/255, green: 38/255, blue: 38/255, alpha: 0.9)
-        onLogin.clipsToBounds = true
-        onLogin.layer.cornerRadius = (height*0.2)/10
-        onLogin.text = "登入中   請稍候"
-        self.view.addSubview(onLogin)
+        onLogining = UILabel()
+        onLogining.isHidden = true
+        onLogining.translatesAutoresizingMaskIntoConstraints = false
+        onLogining.textAlignment = .center
+        onLogining.textColor = UIColor.white
+        onLogining.backgroundColor = UIColor(red: 38/255, green: 38/255, blue: 38/255, alpha: 0.9)
+        onLogining.clipsToBounds = true
+        onLogining.layer.cornerRadius = (height*0.2)/10
+        onLogining.text = "登入中   請稍候"
+        self.view.addSubview(onLogining)
         
-        onLogin.widthAnchor.constraint(equalToConstant: width * 0.7).isActive = true
-        onLogin.heightAnchor.constraint(equalToConstant: height * 0.08).isActive = true
-        onLogin.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        onLogin.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        onLogining.widthAnchor.constraint(equalToConstant: width * 0.7).isActive = true
+        onLogining.heightAnchor.constraint(equalToConstant: height * 0.08).isActive = true
+        onLogining.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        onLogining.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
     
     

@@ -48,6 +48,8 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor(hexString: "#3e426f")
+        view.borderWidth = 1.5
+        view.borderColor = UIColor(hexString: "#7c82a2")
         
         return view
     }()
@@ -68,6 +70,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
     let mapButton:UIButton = {
         let bt = UIButton()
         bt.translatesAutoresizingMaskIntoConstraints = false
+//        bt.backgroundColor = UIColor.red
         bt.tag = 1
         
         return bt
@@ -76,6 +79,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
     let settingButton:UIButton = {
         let bt = UIButton()
         bt.translatesAutoresizingMaskIntoConstraints = false
+//        bt.backgroundColor = UIColor.green
         bt.tag = 2
         
         return bt
@@ -96,6 +100,18 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         
         return icon
     }()
+    
+    let locationLabel:UILabel = {
+        let lb = UILabel()
+        lb.translatesAutoresizingMaskIntoConstraints = false
+        lb.numberOfLines = 0
+        lb.font = UIFont.boldSystemFont(ofSize: 20)
+        lb.textColor = UIColor(hexString: "#ffa700")
+        lb.text = "台中市西屯區市政北二路128號號號號號號號"
+        
+        return lb
+    }()
+    
     //MARK: viewDidLoad
     
     override func viewDidLoad() {
@@ -115,8 +131,14 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         self.setupBottom()
         self.setupButton()
         self.setupCircleImage()
-        self.setupIcon()
+        self.setupIconAndLabel()
 //        self.signOutBT()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.getCurrentPlace()
     }
     
     func locationManagerInit() {
@@ -126,6 +148,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         locationManager.requestAlwaysAuthorization()
         locationManager.distanceFilter = 50
         locationManager.startUpdatingLocation()
+        locationManager.startMonitoringSignificantLocationChanges()
         locationManager.delegate = self
     }
     
@@ -173,12 +196,13 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         bottomView.addSubview(settingButton)
         view.addSubview(circleButton)
         
-        mapButton.widthAnchor.constraint(equalToConstant: width / 2).isActive = true
+        mapButton.widthAnchor.constraint(equalToConstant: width - ((width * 0.25) + (height * 0.1))).isActive = true
         mapButton.heightAnchor.constraint(equalToConstant: height * 0.1).isActive = true
-        mapButton.leftAnchor.constraint(equalTo: bottomView.leftAnchor).isActive = true
+        mapButton.leftAnchor.constraint(equalTo: bottomView.leftAnchor, constant: width * 0.25).isActive = true
+        
         mapButton.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor).isActive = true
         
-        settingButton.widthAnchor.constraint(equalToConstant: width / 2).isActive = true
+        settingButton.widthAnchor.constraint(equalToConstant: height * 0.1).isActive = true
         settingButton.heightAnchor.constraint(equalToConstant: height * 0.1).isActive = true
         settingButton.rightAnchor.constraint(equalTo: bottomView.rightAnchor).isActive = true
         settingButton.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor).isActive = true
@@ -187,24 +211,31 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         
         circleButton.widthAnchor.constraint(equalToConstant: width * 0.25).isActive = true
         circleButton.heightAnchor.constraint(equalToConstant: width * 0.25).isActive = true
-        circleButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+//        circleButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        circleButton.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         circleButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -3).isActive = true
     }
     
-    func setupIcon() {
+    func setupIconAndLabel() {
         
-        mapButton.addSubview(mapIcon)
+//        mapButton.addSubview(mapIcon)
+        mapButton.addSubview(locationLabel)
         settingButton.addSubview(settingIcon)
         
-        mapIcon.widthAnchor.constraint(equalToConstant: (height * 0.1) * 0.7).isActive = true
-        mapIcon.heightAnchor.constraint(equalToConstant: (height * 0.1) * 0.7).isActive = true
-        mapIcon.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor).isActive = true
-        mapIcon.centerXAnchor.constraint(equalTo: bottomView.centerXAnchor, constant: -(width / 3.5)).isActive = true
+//        mapIcon.widthAnchor.constraint(equalToConstant: (height * 0.1) * 0.7).isActive = true
+//        mapIcon.heightAnchor.constraint(equalToConstant: (height * 0.1) * 0.7).isActive = true
+//        mapIcon.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor).isActive = true
+//        mapIcon.centerXAnchor.constraint(equalTo: bottomView.centerXAnchor, constant: -(width / 3.5)).isActive = true
         
-        settingIcon.widthAnchor.constraint(equalToConstant: (height * 0.1) * 0.7).isActive = true
-        settingIcon.heightAnchor.constraint(equalToConstant: (height * 0.1) * 0.7).isActive = true
-        settingIcon.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor).isActive = true
-        settingIcon.centerXAnchor.constraint(equalTo: bottomView.centerXAnchor, constant: width / 3.5).isActive = true
+        locationLabel.topAnchor.constraint(equalTo: self.mapButton.topAnchor).isActive = true
+        locationLabel.leftAnchor.constraint(equalTo: self.mapButton.leftAnchor, constant: 10).isActive = true
+        locationLabel.rightAnchor.constraint(equalTo: self.mapButton.rightAnchor).isActive = true
+        locationLabel.bottomAnchor.constraint(equalTo: self.mapButton.bottomAnchor).isActive = true
+        
+        settingIcon.widthAnchor.constraint(equalToConstant: (height * 0.1) * 0.6).isActive = true
+        settingIcon.heightAnchor.constraint(equalToConstant: (height * 0.1) * 0.6).isActive = true
+        settingIcon.centerYAnchor.constraint(equalTo: self.settingButton.centerYAnchor).isActive = true
+        settingIcon.centerXAnchor.constraint(equalTo: self.settingButton.centerXAnchor).isActive = true
     }
     
     func setupCircleImage() {
@@ -245,7 +276,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         }
     }
     
-    func buttontClick(sender: UIButton) {
+    @objc func buttontClick(sender: UIButton) {
         
         guard let uid = Auth.auth().currentUser?.uid else {
             return
@@ -268,7 +299,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         }
     }
     
-    func getCurrentPlace() {
+    func getCurrentPlace() -> Any{
         
         placesClient.currentPlace { (placeLikelihoodList, error) in
             if let error = error {
@@ -277,18 +308,16 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
             }
             
             if let placeLikelihoodList = placeLikelihoodList {
-                let place = placeLikelihoodList.likelihoods
-                for i in 0 ... (place.count - 1) {
-                    print("\(place[i].likelihood)")
+                
+                let place = placeLikelihoodList.likelihoods.first?.place
+                if let place = place {
+                    print("place: \(place.name)")
+                    let address = place.formattedAddress?.components(separatedBy: ", ").joined(separator: "\n")
+                    print("address: \(address!)")
                 }
-//                let place = placeLikelihoodList.likelihoods.first?.place
-//                if let place = place {
-//                    print("place: \(place.name)")
-//                    let address = place.formattedAddress?.components(separatedBy: ", ").joined(separator: "\n")
-//                    print("address: \(address!)")
-//                }
             }
         }
+        return ""
     }
     
     
@@ -340,11 +369,20 @@ extension MainViewController: CLLocationManagerDelegate {
         print("Error: \(error)")
     }
     
-
+    // 当这个区域开始被监听的时候,就会来到didStartMonitoringFor方法
+    func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
+        
+    }
     
+    // 进入该区域的时候会来到didEnterRegion方法(动作)
+    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
+        
+    }
     
-    
-    
+    // 离开该区域的时候会来到didExitRegion方法(动作)
+    func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
+        
+    }
     
     
     

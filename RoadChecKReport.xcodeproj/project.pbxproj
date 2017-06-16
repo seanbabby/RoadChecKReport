@@ -13,6 +13,7 @@
 		548CACB41EE7E18200F7DB67 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 548CACB31EE7E18200F7DB67 /* Assets.xcassets */; };
 		548CACB71EE7E18200F7DB67 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 548CACB51EE7E18200F7DB67 /* LaunchScreen.storyboard */; };
 		548CACBF1EE7E1CC00F7DB67 /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 548CACBE1EE7E1CC00F7DB67 /* LogInViewController.swift */; };
+		54E5F4C81EF2582500A6B3D2 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54E5F4C71EF2582500A6B3D2 /* SettingViewController.swift */; };
 		E156165418ABFBABB86C33CF /* Pods_RoadChecKReport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8814FAC656F631D6AE000C2 /* Pods_RoadChecKReport.framework */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +29,7 @@
 		548CACB81EE7E18200F7DB67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		548CACBE1EE7E1CC00F7DB67 /* LogInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
 		548CACC11EE800CD00F7DB67 /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-TW"; path = "zh-Hant-TW.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		54E5F4C71EF2582500A6B3D2 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		E78AD4294E638DB25764B253 /* Pods-RoadChecKReport.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RoadChecKReport.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RoadChecKReport/Pods-RoadChecKReport.debug.xcconfig"; sourceTree = "<group>"; };
 		F8814FAC656F631D6AE000C2 /* Pods_RoadChecKReport.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RoadChecKReport.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -89,6 +91,7 @@
 			children = (
 				548CACBE1EE7E1CC00F7DB67 /* LogInViewController.swift */,
 				545041F81EE9290D00501D75 /* MainViewController.swift */,
+				54E5F4C71EF2582500A6B3D2 /* SettingViewController.swift */,
 			);
 			name = VIew;
 			sourceTree = "<group>";
@@ -238,6 +241,7 @@
 				545041F91EE9290D00501D75 /* MainViewController.swift in Sources */,
 				548CACBF1EE7E1CC00F7DB67 /* LogInViewController.swift in Sources */,
 				548CACAD1EE7E18200F7DB67 /* AppDelegate.swift in Sources */,
+				54E5F4C81EF2582500A6B3D2 /* SettingViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
