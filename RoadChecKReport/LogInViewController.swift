@@ -33,8 +33,8 @@ class LogInViewController: UIViewController {
         return button
     }()
     
-    let width = UIScreen.main.bounds.width
-    let height = UIScreen.main.bounds.height
+    let width : CGFloat = UIScreen.main.bounds.width
+    let height : CGFloat = UIScreen.main.bounds.height
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,11 +48,10 @@ class LogInViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let user = Auth.auth().currentUser
-        
-        if (user?.uid) != nil  {
-            print("uid: \(String(describing: user?.uid))")
-            print("userInfo: \(user?.displayName, user?.email, user?.photoURL)")
+        if let user = Auth.auth().currentUser {
+            
+            print("uid: \(String(describing: user.uid))")
+            print("userInfo: \(user.displayName, user.email, user.photoURL)")
             
             DispatchQueue.main.async {
                 let mainVC = MainViewController()
@@ -89,8 +88,6 @@ class LogInViewController: UIViewController {
                 print("User cancelled login.")
             case .success(grantedPermissions: _, declinedPermissions: _, token: _):
                 
-                
-                
                 self.onLogining.isHidden = false
                 self.setupIndicator()
                 
@@ -117,6 +114,7 @@ class LogInViewController: UIViewController {
     }
     
     func setupIndicator() {
+        
         indicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
         self.indicator?.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(indicator!)
@@ -129,6 +127,7 @@ class LogInViewController: UIViewController {
     }
     
     func setOnLoginningLabel() {
+        
         onLogining = UILabel()
         onLogining.isHidden = true
         onLogining.translatesAutoresizingMaskIntoConstraints = false

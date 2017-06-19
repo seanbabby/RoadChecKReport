@@ -14,22 +14,30 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
     
     //MARK: 宣告
     
+    //button tag: 0->report, 1->map, 2->setting
+    enum buttonType : Int {
+        case report = 0
+        case map = 1
+        case setting = 2
+    }
+    
     var placesClient: GMSPlacesClient!
     var locationManager = CLLocationManager()
     var currentLocation : CLLocation?
     var zoomLevel : Float = 15.0
     var statusBarHeight:CGFloat = 0.0
     
-    let width = UIScreen.main.bounds.width
-    let height = UIScreen.main.bounds.height
+    let width : CGFloat = UIScreen.main.bounds.width
+    let height : CGFloat = UIScreen.main.bounds.height
     
-    var canUseHeight:CGFloat = 0.0
+    var canUseHeight : CGFloat = 0.0
     
     let circleButton:UIButton = {
+        
         let bt = UIButton()
         bt.translatesAutoresizingMaskIntoConstraints = false
         bt.backgroundColor = UIColor(hexString: "#3e426f")
-        bt.tag = 0
+        bt.tag = buttonType.report.rawValue
         bt.borderWidth = 2
         bt.borderColor = UIColor(hexString: "#7c82a2")
         
@@ -37,6 +45,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
     }()
     
     let circleImageView:UIImageView = {
+        
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         image.image = UIImage(named: "Exclamation")
@@ -45,6 +54,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
     }()
     
     let bottomView:UIView = {
+        
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor(hexString: "#3e426f")
@@ -55,9 +65,9 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
     }()
     
     let mapView:GMSMapView = {
+        
         let map = GMSMapView()
         map.translatesAutoresizingMaskIntoConstraints = false
-        
         //can put settings here
         map.isMyLocationEnabled = true
         map.settings.myLocationButton = true
@@ -68,24 +78,25 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
     }()
     
     let mapButton:UIButton = {
+        
         let bt = UIButton()
         bt.translatesAutoresizingMaskIntoConstraints = false
-//        bt.backgroundColor = UIColor.red
-        bt.tag = 1
+        bt.tag = buttonType.map.rawValue
         
         return bt
     }()
     
     let settingButton:UIButton = {
+        
         let bt = UIButton()
         bt.translatesAutoresizingMaskIntoConstraints = false
-//        bt.backgroundColor = UIColor.green
-        bt.tag = 2
+        bt.tag = buttonType.setting.rawValue
         
         return bt
     }()
     
     let mapIcon:UIImageView = {
+        
         let icon = UIImageView()
         icon.translatesAutoresizingMaskIntoConstraints = false
         icon.image = UIImage(named: "map")
@@ -94,6 +105,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
     }()
     
     let settingIcon:UIImageView = {
+        
         let icon = UIImageView()
         icon.translatesAutoresizingMaskIntoConstraints = false
         icon.image = UIImage(named: "setting")
@@ -102,12 +114,13 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
     }()
     
     let locationLabel:UILabel = {
+        
         let lb = UILabel()
         lb.translatesAutoresizingMaskIntoConstraints = false
         lb.numberOfLines = 0
         lb.font = UIFont.boldSystemFont(ofSize: 20)
         lb.textColor = UIColor(hexString: "#ffa700")
-        lb.text = "台中市西屯區市政北二路128號號號號號號號"
+        lb.text = "取得位置資訊中..."
         
         return lb
     }()
@@ -156,9 +169,9 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
     
     func setupMapView() {
         
-        let my = locationManager.location?.coordinate
+        let myCoordinate : CLLocationCoordinate2D = locationManager.location!.coordinate
         
-        let camera = GMSCameraPosition.camera(withLatitude: (my?.latitude)!, longitude: (my?.longitude)!, zoom: 6.0)
+        let camera : GMSCameraPosition = GMSCameraPosition.camera(withLatitude: (myCoordinate.latitude), longitude: (myCoordinate.longitude), zoom: 6.0)
         mapView.camera = camera
         
         view.addSubview(mapView)
@@ -276,7 +289,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         }
     }
     
-    @objc func buttontClick(sender: UIButton) {
+    func buttontClick(sender: UIButton) {
         
         guard let uid = Auth.auth().currentUser?.uid else {
             return
@@ -287,11 +300,11 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
 //        let my = locationManager.location
         
         //button tag: 0->report, 1->map, 2->setting
-        if sender.tag == 1 {
+        if sender.tag == buttonType.map.rawValue {
             print("map")
-        } else if sender.tag == 2 {
+        } else if sender.tag == buttonType.setting.rawValue {
             print("setting")
-        } else if sender.tag == 0 {
+        } else if sender.tag == buttonType.report.rawValue {
             print("user ID: \(uid)")
             print("latitude:\(my.coordinate.latitude), longitude:\(my.coordinate.longitude)")
             
@@ -299,7 +312,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         }
     }
     
-    func getCurrentPlace() -> Any{
+    func getCurrentPlace() {
         
         placesClient.currentPlace { (placeLikelihoodList, error) in
             if let error = error {
@@ -307,20 +320,20 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
                 return
             }
             
-            if let placeLikelihoodList = placeLikelihoodList {
+            DispatchQueue.main.async {
+                if let placeLikelihoodList = placeLikelihoodList {
                 
-                let place = placeLikelihoodList.likelihoods.first?.place
-                if let place = place {
-                    print("place: \(place.name)")
-                    let address = place.formattedAddress?.components(separatedBy: ", ").joined(separator: "\n")
-                    print("address: \(address!)")
+                    let place = placeLikelihoodList.likelihoods.first?.place
+                    if let place = place {
+                        print("place: \(place.name)")
+                        let address = place.formattedAddress?.components(separatedBy: ", ").joined(separator: "\n")
+                        print("address: \(address!)")
+                        self.locationLabel.text = address
+                    }
                 }
             }
         }
-        return ""
     }
-    
-    
 }
 
 
@@ -344,6 +357,8 @@ extension MainViewController: CLLocationManagerDelegate {
         } else {
             mapView.animate(to: camera)
         }
+        
+        self.getCurrentPlace()
     }
     
     // Handle authorization for the location manager.
