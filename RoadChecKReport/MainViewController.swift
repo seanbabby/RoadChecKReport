@@ -26,6 +26,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
     var currentLocation : CLLocation?
     var zoomLevel : Float = 15.0
     var statusBarHeight:CGFloat = 0.0
+    let taiwanCenterCoordinate : CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 23.9740931, longitude: 120.9777142)
     
     let width : CGFloat = UIScreen.main.bounds.width
     let height : CGFloat = UIScreen.main.bounds.height
@@ -139,7 +140,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
         
         view.backgroundColor = UIColor.white
 
-        self.locationManagerInit()
+//        self.locationManagerInit()
         self.setupMapView()
         self.setupBottom()
         self.setupButton()
@@ -151,6 +152,7 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        self.checkUserAuthorizationStatus()
         self.getCurrentPlace()
     }
     
@@ -169,9 +171,9 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
     
     func setupMapView() {
         
-        let myCoordinate : CLLocationCoordinate2D = locationManager.location!.coordinate
+        let myCoordinate = locationManager.location?.coordinate
         
-        let camera : GMSCameraPosition = GMSCameraPosition.camera(withLatitude: (myCoordinate.latitude), longitude: (myCoordinate.longitude), zoom: 6.0)
+        let camera = GMSCameraPosition.camera(withLatitude: myCoordinate?.latitude ?? taiwanCenterCoordinate.latitude, longitude: myCoordinate?.longitude ?? taiwanCenterCoordinate.longitude, zoom: 6.0)
         mapView.camera = camera
         
         view.addSubview(mapView)
@@ -234,11 +236,6 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
 //        mapButton.addSubview(mapIcon)
         mapButton.addSubview(locationLabel)
         settingButton.addSubview(settingIcon)
-        
-//        mapIcon.widthAnchor.constraint(equalToConstant: (height * 0.1) * 0.7).isActive = true
-//        mapIcon.heightAnchor.constraint(equalToConstant: (height * 0.1) * 0.7).isActive = true
-//        mapIcon.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor).isActive = true
-//        mapIcon.centerXAnchor.constraint(equalTo: bottomView.centerXAnchor, constant: -(width / 3.5)).isActive = true
         
         locationLabel.topAnchor.constraint(equalTo: self.mapButton.topAnchor).isActive = true
         locationLabel.leftAnchor.constraint(equalTo: self.mapButton.leftAnchor, constant: 10).isActive = true
@@ -334,6 +331,40 @@ class MainViewController: UIViewController, GMSMapViewDelegate {
             }
         }
     }
+    
+    
+    func checkUserAuthorizationStatus() {
+        
+        locationManager = CLLocationManager()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.distanceFilter = 20
+        
+        locationManager.delegate = self
+        
+        // 首次使用 向使用者詢問定位自身位置權限
+        if CLLocationManager.authorizationStatus()
+            == .notDetermined {
+            // 取得定位服務授權
+            locationManager.requestAlwaysAuthorization()
+            
+            // 開始定位自身位置
+            locationManager.startUpdatingLocation()
+            locationManager.startMonitoringSignificantLocationChanges()
+        }
+            // 使用者已經拒絕定位自身位置權限
+        else if CLLocationManager.authorizationStatus()
+            == .denied {
+            // 提示可至[設定]中開啟權限
+            let alertController = UIAlertController(title: "定位權限已關閉", message: "如要變更權限，請至 設定 > 隱私權 > 定位服務 開啟",preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "確認", style: .default, handler:nil)
+            alertController.addAction(okAction)
+            self.present(alertController,animated: true, completion: nil)
+        }
+    }
+    
+    
+    
+    
 }
 
 

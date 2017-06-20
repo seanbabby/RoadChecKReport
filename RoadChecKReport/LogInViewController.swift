@@ -42,7 +42,6 @@ class LogInViewController: UIViewController {
         self.view.backgroundColor = UIColor.white
         
         self.setupLogInBT()
-        self.setOnLoginningLabel()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -53,14 +52,15 @@ class LogInViewController: UIViewController {
             print("uid: \(String(describing: user.uid))")
             print("userInfo: \(user.displayName, user.email, user.photoURL)")
             
+            self.setOnLoginningLabel()
+            self.setupIndicator()
+            
             DispatchQueue.main.async {
                 let mainVC = MainViewController()
                 
                 UIApplication.shared.keyWindow?.rootViewController = mainVC
                 self.dismiss(animated: true, completion: nil)
             }
-        } else {
-            self.onLogining.isHidden = true
         }
     }
     
@@ -129,7 +129,7 @@ class LogInViewController: UIViewController {
     func setOnLoginningLabel() {
         
         onLogining = UILabel()
-        onLogining.isHidden = true
+//        onLogining.isHidden = true
         onLogining.translatesAutoresizingMaskIntoConstraints = false
         onLogining.textAlignment = .center
         onLogining.textColor = UIColor.white
